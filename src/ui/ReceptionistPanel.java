@@ -20,7 +20,7 @@ public class ReceptionistPanel extends JPanel {
         this.parentFrame = parentFrame;
         setLayout(new BorderLayout());
 
-        // Top panel with receptionist info and Back button
+        // --- Top panel with receptionist info and Back button ---
         JPanel topPanel = new JPanel(new BorderLayout());
         JLabel welcomeLabel = new JLabel("Welcome, " + receptionistName);
         JButton backButton = new JButton("Back");
@@ -29,7 +29,7 @@ public class ReceptionistPanel extends JPanel {
         topPanel.add(backButton, BorderLayout.EAST);
         add(topPanel, BorderLayout.NORTH);
 
-        // Form panel for patient registration
+        // --- Form panel for patient registration ---
         JPanel formPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
@@ -61,10 +61,10 @@ public class ReceptionistPanel extends JPanel {
 
         add(formPanel, BorderLayout.CENTER);
 
-        // Save new patient
+        // --- Save new patient ---
         saveBtn.addActionListener(e -> savePatient());
 
-        // View all patients
+        // --- View all patients ---
         viewBtn.addActionListener(e -> showAllPatients());
     }
 
@@ -87,7 +87,10 @@ public class ReceptionistPanel extends JPanel {
 
         // Reset form for next patient
         currentPatientId = patientService.getNextPatientId();
-        nameField.setText(""); genderField.setText(""); placeField.setText(""); phoneField.setText("");
+        nameField.setText("");
+        genderField.setText("");
+        placeField.setText("");
+        phoneField.setText("");
     }
 
     private void showAllPatients() {
@@ -184,10 +187,11 @@ public class ReceptionistPanel extends JPanel {
         frame.setVisible(true);
     }
 
+    // --- FIXED: Go back to the main home screen ---
     private void goBack() {
         parentFrame.getContentPane().removeAll();
-        parentFrame.repaint();
+        parentFrame.add(new MainFrame().getContentPane()); // Go back to main home UI
         parentFrame.revalidate();
-        // Optionally, show main/home panel here
+        parentFrame.repaint();
     }
 }
