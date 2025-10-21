@@ -1,0 +1,2 @@
+0001,John Doe,Male,London,9876543210,Dr. Smith,Paracetamol
+0002,Jane Doe,Female,Paris,9123456789,Dr. Patel,Amoxicillin

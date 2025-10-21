@@ -1,61 +1,53 @@
 package ui;
-
+import data.DataStore;
 import javax.swing.*;
-import java.awt.*;
 
 public class MainFrame extends JFrame {
 
+    private final JTabbedPane tabs = new JTabbedPane();
+
     public MainFrame() {
-        setTitle("Hospital Management System");
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        super("Hospital Patient Management System");
         setSize(900, 600);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        // top banner with image and quote
-        JPanel banner = new JPanel(new BorderLayout());
-        banner.setPreferredSize(new Dimension(900,120));
-        // image if exists
-        try {
-            ImageIcon icon = new ImageIcon("src/resources/images/hospital.jpg"); // put an image at this path if you want
-            JLabel imgLabel = new JLabel(icon);
-            banner.add(imgLabel, BorderLayout.WEST);
-        } catch (Exception ignore) {}
-        JLabel quote = new JLabel("<html><div style='padding:20px;font-size:16px'>Your Health, Our Priority</div></html>");
-        banner.add(quote, BorderLayout.CENTER);
+        // Initialize data files
+        DataStore.initFiles();
 
-        // tabs for roles
-        JTabbedPane tabs = new JTabbedPane();
-        tabs.add("Receptionist", new RolePanel("Receptionist"));
-        tabs.add("Doctor", new RolePanel("Doctor"));
-        tabs.add("Patient", new RolePanel("Patient"));
+        // Build Tabs
+        tabs.addTab("Home", buildHomePanel());
+        tabs.addTab("Receptionist", new LoginPanel(LoginPanel.UserType.RECEPTIONIST, this));
+        tabs.addTab("Doctor", new LoginPanel(LoginPanel.UserType.DOCTOR, this));
+        tabs.addTab("Patient", new LoginPanel(LoginPanel.UserType.PATIENT, this));
 
-        add(banner, BorderLayout.NORTH);
-        add(tabs, BorderLayout.CENTER);
-
-        setVisible(true);
+        add(tabs);
     }
 
-    // small panel with a button to open the login for the role
-    static class RolePanel extends JPanel {
-        public RolePanel(String role) {
-            setLayout(new BorderLayout());
-            JPanel center = new JPanel();
-            center.setLayout(new BoxLayout(center, BoxLayout.Y_AXIS));
-            center.setBorder(BorderFactory.createEmptyBorder(30,30,30,30));
-            center.add(Box.createVerticalGlue());
-            JButton open = new JButton("Go to " + role + " Login");
-            open.setAlignmentX(Component.CENTER_ALIGNMENT);
-            open.addActionListener(e -> {
-                new LoginFrame(role.toLowerCase()); // open login for that role
-            });
-            center.add(open);
-            center.add(Box.createVerticalGlue());
-            add(center, BorderLayout.CENTER);
-        }
+    private JPanel buildHomePanel() {
+        JPanel panel = new JPanel(new java.awt.BorderLayout());
+
+        JLabel img = new JLabel(
+                "<html><div style='text-align:center;font-size:20px;margin-top:80px'>[Hospital Image Here]</div></html>",
+                SwingConstants.CENTER);
+        JLabel quote = new JLabel(
+                "<html><div style='text-align:center;padding:20px;font-size:16px'>Caring for life — professional, compassionate, reliable services</div></html>",
+                SwingConstants.CENTER);
+
+        panel.add(img, java.awt.BorderLayout.CENTER);
+        panel.add(quote, java.awt.BorderLayout.SOUTH);
+        return panel;
+    }
+
+    // Helper to switch panels from LoginPanel or other child panels
+    public void switchContent(JPanel newPanel) {
+        getContentPane().removeAll();
+        add(newPanel);
+        revalidate();
+        repaint();
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(MainFrame::new);
+        SwingUtilities.invokeLater(() -> new MainFrame().setVisible(true));
     }
 }
-
